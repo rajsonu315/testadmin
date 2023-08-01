@@ -1,0 +1,139 @@
+<%- include('include/header') %>
+
+
+
+  <style>
+    .notifier-container {
+
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      padding: 4px;
+      width: 250px;
+      max-width: 98%;
+      font-family: "Segoe UI", Tahoma, Calibri, Verdana, sans-serif;
+
+    }
+  </style>
+
+
+
+
+  <div class="page-content-wrapper">
+    <div class="content-container">
+      <div class="page-content">
+        <div class="content-header">
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item">Application</li>
+            <li class="breadcrumb-item">Analytics</li>
+          </ul>
+        </div>
+
+
+        <div class="row">
+          <div class="col-12">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="card">
+                      <div class="card-body bg-primary rounded-3">
+                        <div class="row">
+                          <div class="col-lg-12 col-md-12 col-12">
+                            <div class="d-lg-flex justify-content-between align-items-center ">
+                              <div class="d-md-flex align-items-center">
+                                <img src="assets/images/user/avatar-2.jpg" alt="Image"
+                                  class="rounded-circle avatar avatar-xl">
+                                <div class="ms-md-4 mt-3">
+
+                                  <h2 class="text-white fw-600 mb-1">Welcome   <%= user %> <br>
+                                  
+                                  </h2>
+
+                                  <!-- <p class="text-white"> Here is what’s happening with your projects today:</p> -->
+                                </div>
+
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xl-6 col-sm-6">
+                    <div class="card">
+                      <div class="card-body rounded border border-success bg-light-success">
+                        <div class="d-flex align-items-center">
+                          <div class="numbers flex-grow-1 pe-3">
+                            <p class="fw-600 mb-1 text-muted">Success Payment</p>
+                            <h4 class="fw-700 mb-0 text-dark-black">
+                              <%= success %> <span class="text-success text-sm fw-700"></span>
+                            </h4>
+                          </div>
+                          <div class="icon-shape bg-success ">
+                            <i class="ti ti-report-money"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="col-xl-6 col-sm-6">
+                    <div class="card">
+                      <div class="card-body  rounded border border-danger bg-light-danger">
+                        <div class="d-flex align-items-center">
+                          <div class="numbers flex-grow-1 pe-3">
+                            <p class="fw-600 mb-1 text-muted">Fail Payment</p>
+                            <h4 class="fw-700 mb-0 text-dark-black">
+                              <%= unsuccessful %> <span class="text-danger text-sm fw-700"></span>
+                            </h4>
+                          </div>
+                          <div class="icon-shape bg-danger ">
+                            <i class="ti ti-click"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+
+
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <% if(typeof msg !=='undefined' ){ %>
+
+  
+      <div class="notifier-container" id="flash-message">
+        <div class="toast text-white bg-success fade show">
+          <div class="d-flex">
+            <div class="toast-body">
+              <%= msg %>
+            </div>
+ 
+          </div>
+        </div>
+      </div>
+        <% } %>
+
+          <%- include('include/footer') %>
+            <script>
+              const flashMessageContainer = document.getElementById('flash-message');
+              // Hide the message after 3 seconds
+              setTimeout(() => {
+                flashMessageContainer.style.display = 'none';
+              }, 3000);
+            </script>

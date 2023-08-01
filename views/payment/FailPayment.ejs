@@ -1,0 +1,297 @@
+<%- include('../include/header') %>
+
+    <!-- { Main Content } start -->
+    <div class="page-content-wrapper">
+        <div class="content-container">
+            <div class="page-content">
+                <div class="content-header">
+                    <h1>Fail Payment</h1>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item">Fail Payment</li>
+
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card table-card">
+                            <div class="card-body">
+
+                                <div class="row">
+
+                                    <div class="col-xl-6 col-sm-6">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h4>Date Range</h4>
+                                            </div>
+                                            <div class="d-none d-md-none d-lg-block header-search ms-3">
+
+                                                <form action="">
+                                                    <div class="input-group ">
+                                                        <!-- <input type="date" class="form-control" name="startDate"
+                                                        value="01-01-2023 - 01-15-2018" />
+                                                        <input type="date" class="form-control" name="endDate"
+                                                        value="01-01-2023 - 01-15-2018" /> -->
+
+
+                                                        <input type="hidden" class="form-control" id="startDate"
+                                                            name="startDate" />
+                                                        <input type="hidden" class="form-control" id="endDate"
+                                                            name="endDate" />
+
+
+                                                        <input type="text" class="form-control rounded-3"
+                                                            name="daterange" />
+                                                        <div class="search-btn">
+                                                            <button class="btn btn-success" type="submit">
+                                                                Date Filter
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-6 col-sm-6">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h4>Search amount, upi id,cname</h4>
+                                            </div>
+                                            <div class="d-none d-md-none d-lg-block header-search ms-3">
+                                                <form action="">
+                                                    <div class="input-group ">
+                                                        <input class="form-control rounded-3" type="search"
+                                                            name="Search" value="" id="searchInput"
+                                                            placeholder="Search amount, upi id,cname">
+                                                        <div class="search-btn">
+                                                            <button class="btn btn-success" type="submit">
+                                                                search
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="table-responsive">
+
+                                    <table class="table" id="UserList" data-order='[[ 0, "desc" ]]'>
+
+                                        <thead>
+                                            <tr>
+                                                <th>id</th>
+                                                <th>User ID</th>
+                                                <th>Cname</th>
+                                                <th>upi</th>
+                                                <th>Amount</th>
+                                                <th>Create Date</th>
+                                                <th>Status</th>
+                                                <!-- <th>Action</th> -->
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            <% patmentData.forEach((data)=>{ %>
+                                                <tr>
+                                                    <td>
+                                                        <%= data.id %>
+
+                                                    </td>
+                                                    <td>
+                                                        <%= data.user_id %>
+                                                    </td>
+                                                    <td>
+                                                        <%= data.firstName %>
+
+                                                    </td>
+                                                    <td>
+                                                        <%= data.Mobile %>
+                                                    </td>
+                                                    <td> <%= data.Amount %></td>
+                                                    <td>
+                                                        <%= (new Date(data.createdAt)).toLocaleDateString() %>
+
+                                                    </td>
+                                                    <td>
+                                       
+
+                                                                <% if(data.Status==='0' ){%>
+                                                                    <span
+                                                                        class="badge bg-danger text-white fs-15 rounded">
+                                                                        payment fail</span>
+
+
+                                                                    <% } %>
+
+                                                    </td>
+                                                    <!-- <td>
+                                                    <a href="#!" class="btn btn-icon p-2">
+                                                        <i data-feather="edit"></i>
+                                                    </a>
+                                                    <a href="#!" class="btn btn-icon p-2">
+                                                        <i data-feather="trash-2"></i>
+                                                    </a>
+                                                </td> -->
+                                                </tr>
+
+
+                                                <% }) %>
+
+
+
+                                                    <!-- <tr>
+                                            <td>
+                                                1
+                                                </td>
+                                                <td>
+                                                   segdfgnhm
+                                                </td>
+                                                <td>
+                                                    DavidJHsieh
+                                                </td>
+                                                <td>
+                                                   123456@upi
+                                                </td>
+                                                <td>15000</td>
+                                                <td>
+                                                    04/23/2023
+                                                </td>
+                                            <td>
+                                                <span class="badge bg-danger text-white fs-15 rounded">Blocked</span>
+                                            </td>
+                                            <td>
+                                                <a href="#!" class="btn btn-icon p-2">
+                                                    <i data-feather="edit"></i>
+                                                </a>
+                                                <a href="#!" class="btn btn-icon p-2">
+                                                    <i data-feather="trash-2"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                1
+                                                </td>
+                                                <td>
+                                                   segdfgnhm
+                                                </td>
+                                                <td>
+                                                    DavidJHsieh
+                                                </td>
+                                                <td>
+                                                   123456@upi
+                                                </td>
+                                                <td>15000</td>
+                                                <td>
+                                                    04/23/2023
+                                                </td>
+                                            <td>
+                                                <span class="badge bg-success text-white fs-15 rounded">Active</span>
+                                            </td>
+                                            <td>
+                                                <a href="#!" class="btn btn-icon p-2">
+                                                    <i data-feather="edit"></i>
+                                                </a>
+                                                <a href="#!" class="btn btn-icon p-2">
+                                                    <i data-feather="trash-2"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                1
+                                                </td>
+                                                <td>
+                                                   segdfgnhm
+                                                </td>
+                                                <td>
+                                                    DavidJHsieh
+                                                </td>
+                                                <td>
+                                                   123456@upi
+                                                </td>
+                                                <td>15000</td>
+                                                <td>
+                                                    04/23/2023
+                                                </td>
+                                            <td>
+                                                <span class="badge bg-warning text-white fs-15 rounded">Pending</span>
+                                            </td>
+                                            <td>
+                                                <a href="#!" class="btn btn-icon p-2">
+                                                    <i data-feather="edit"></i>
+                                                </a>
+                                                <a href="#!" class="btn btn-icon p-2">
+                                                    <i data-feather="trash-2"></i>
+                                                </a>
+                                            </td>
+                                        </tr> -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- { Main Content } end -->
+
+
+    <!-- Required Js -->
+    <%- include('../include/footer') %>
+
+        <!-- jqueryDatatabl js -->
+
+        <script>
+            // Table js
+            $(document).ready(function () {
+                $('#UserList').DataTable({
+                    lengthMenu: [
+                        [10, 20, -1],
+                        [10, 20, 'Todos']
+                    ],
+                    scrollX: true,
+                });
+            });
+        </script>
+
+<script>
+    $(function () {
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'left'
+        }, function (start, end, label) {
+            const startDate = start.format('YYYY-MM-DD');
+            const endDate = end.format('YYYY-MM-DD');
+
+            $('#startDate').val(startDate)
+            $('#endDate').val(endDate)
+
+
+
+            // Make an AJAX request with the selected date range
+            $.ajax({
+                method: 'GET', // Specify the HTTP method (POST, GET, etc.)
+                url: '/SuccessPayment', // Replace with your server endpoint URL
+                data: {
+                    startDate: startDate,
+                    endDate: endDate
+                },
+                success: function (response) {
+                    console.log('AJAX request successful:');
+                    // Do something with the response from the server
+                },
+                error: function (error) {
+                    console.error('AJAX request failed:', error);
+                    // Handle errors here
+                }
+            });
+        });
+    });
+</script>

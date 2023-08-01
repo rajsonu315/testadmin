@@ -1,0 +1,113 @@
+
+<%- include('../include/header') %>
+
+<!-- [ Main Content ] start -->
+<div class="page-content-wrapper">
+    <div class="content-container">
+        <div class="page-content">
+            <div class="content-header">
+             
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                
+                    <li class="breadcrumb-item">New </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4> Informations</h4>
+                                </div>
+                                <div class="col-12">
+                                    <% if(typeof msg !=='undefined' ){ %>
+                                        <p id="flash-message" class="text-danger flash-message">
+                                            <%= msg %>
+                                        </p>
+
+                                        <% } %>
+                                </div>
+
+                                <form action="PaymentCreate" method="post">
+
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label class="form-label">CName</label>
+                                                <input type="text" name="firstName" class="form-control"
+                                                    placeholder="Enter  Cname" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label class="form-label">Mobile No</label>
+                                                <input type="number" name="Mobile" class="form-control"
+                                                    placeholder="Enter  Mobile No" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label class="form-label">Upi</label>
+                                                <input type="text" name="UPI_NO" class="form-control" placeholder="Enter Upi" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label class="form-label">Amount</label>
+                                                <input type="number" name="Amount" class="form-control" placeholder="Enter Amount" required>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label class="form-label">Quantity</label>
+                                                <input type="number" class="form-control" placeholder="Enter Quantity">
+                                            </div>
+                                        </div>
+                            
+                                        <div class="col-lg-12">
+                                            <div class="form-group form-editor">
+                                                <label class="form-label">Description (optional)</label>
+                                                <textarea class="form-control"
+                                                    id="pc_demo1">Hello World! Some initial bold **bold** and *italic* text</textarea>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                    <div class="text-end">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                        <!-- <button class="btn btn-outline-secondary ms-2">reset</button> -->
+                                    </div>
+                                </div>
+                            
+                            
+                            </form>
+     
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- [ Main Content ] end -->
+<%- include('../include/footer') %>
+
+
+<!-- Required Js -->
+
+<script>
+    var multipleCancelButton = new Choices('#choices-multiple-remove-button', {
+        removeItemButton: true,
+    });
+    (function () {
+        new SimpleMDE({
+            element: document.querySelector("#pc_demo1"),
+            toolbar: ["bold", "italic", "heading", "|", "unordered-list", "ordered-list", "|", "link", "quote"],
+            status: false,
+        });
+    })();
+</script>
