@@ -1,7 +1,7 @@
 const adminLogin = require('../model/AdminLogin')
 const jwt_token = require('jsonwebtoken')
 
-const jwt_security = "sorrybabu"
+const jwt_security = "sorry"
 
 const loginpage = (req, res) => {
     try {
@@ -22,21 +22,31 @@ const login = async (req, res) => {
         const { Email, Password } = req.body
         const user = await adminLogin.findOne({ where: { Email: Email } });
         if (user.Password === Password) {
-            jwt_token.sign({user}, jwt_security,{expiresIn:'100s' })
-            req.session.user = user;
+            jwt_token.sign({user}, jwt_security,{expiresIn:'100s' }, function(err , token){
+                if (err) {
+                    console.log(err);
+                    
+                } else {
+                    token
+                    req.token = token
+                    req.session.user = user;
 
 
-            if (req.session.user) {
-                req.flash('info',`welcome ${req.session.user.Username}`);
-                res.redirect('dashboard');
-
-
-
-            } else {
-                
-            res.redirect('login', );
-
-            }
+                    if (req.session.user) {
+                        req.flash('info',`welcome ${req.session.user.Username}`);
+                        res.redirect('dashboard');
+        
+        
+        
+                    } else {
+                        
+                    res.redirect('login', );
+        
+                    }
+                    
+                }
+            })
+     
 
         } else {
             req.flash('info', 'you email or password not valid')
@@ -47,6 +57,8 @@ const login = async (req, res) => {
 
 
     } catch (error) {
+        req.flash('info', 'you email or password not valid')
+
 
         console.log(error);
 

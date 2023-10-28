@@ -26,10 +26,13 @@ router.post('/PaymentImoprtCSV',csvupload.single('csv'),PaymentControllers.Payme
 router.get('/signin',Auth.is_logout, function(req, res, next) {
   res.render('login/signin', { title: 'Express' });
 });
-router.get('/login',Auth.is_logout,loginController.loginpage);
+router.get('/',Auth.is_logout,loginController.loginpage);
 router.post('/login',Auth.is_logout,loginController.login);
 router.post('/signin',Auth.is_logout,loginController.adminCreate);
 router.get('/dashboard',Auth.is_login,PaymentControllers.dashboard) 
+router.post('/csvDownlload',Auth.is_login,PaymentControllers.csvDownloaded) 
+
+
 
 router.get('/addPayment', Auth.is_login, PaymentControllers.paymentadd);
 router.get('/SuccessPayment',Auth.is_login,PaymentControllers.PaymentSuccess);

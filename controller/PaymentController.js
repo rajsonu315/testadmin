@@ -1,4 +1,7 @@
 const paymentmodel = require('../model/PaymentModel')
+const ExcelJS = require('exceljs');
+
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 const csv = require('csvtojson');
 const fs = require('fs');
@@ -11,8 +14,8 @@ const jwt_token = require('jsonwebtoken')
 const jwt_security = "sorrybabu"
 
 
-const paymentadd= (req , res, next)=>{
-    res.render("./payment/addPayment",{ msg: req.flash('info')[0] })
+const paymentadd = (req, res, next) => {
+    res.render("./payment/addPayment", { msg: req.flash('info')[0] })
 }
 
 const dashboard = async (req, res, next) => {
@@ -22,9 +25,10 @@ const dashboard = async (req, res, next) => {
 
 
         const paymentCount = await paymentmodel.count();
+
         const successfulPaymentCount = await paymentmodel.count({
             where: {
-                Status: true, 
+                Status: true,
             },
         });
         const unsuccessfulPaymentCount = await paymentmodel.count({
@@ -33,9 +37,13 @@ const dashboard = async (req, res, next) => {
             },
         });
 
-        console.log(`Number of all payments: ${paymentCount}`);
-        console.log(`Number of successful payments: ${successfulPaymentCount}`);
-        console.log(`Number of unsuccessful payments: ${unsuccessfulPaymentCount}`);
+        const total = [unsuccessfulPaymentCount, successfulPaymentCount]
+
+        console.log(total);
+
+        // console.log(`Number of all payments: ${paymentCount}`);
+        // console.log(`Number of successful payments: ${successfulPaymentCount}`);
+        // console.log(`Number of unsuccessful payments: ${unsuccessfulPaymentCount}`);
 
 
         if (req.session.user) {
@@ -45,6 +53,7 @@ const dashboard = async (req, res, next) => {
                 success: successfulPaymentCount,
                 unsuccessful: unsuccessfulPaymentCount,
                 user: user,
+                total,
                 msg: req.flash('info')
             });
         } else {
@@ -60,6 +69,65 @@ const dashboard = async (req, res, next) => {
 
 
 }
+
+
+const csvDownloaded = async (req, res) => {
+    try {
+
+        const statusid = req.body
+
+        console.log(statusid.id);
+        // Fetch payment data (replace this with your actual data retrieval)
+    const paymentData = await paymentmodel.findAll({
+      where: {
+        Status: statusid.id,
+      },
+    });
+
+        // Create a new Excel workbook
+        const workbook = new ExcelJS.Workbook();
+
+        // Create a worksheet and define its properties (e.g., name)
+        const worksheet = workbook.addWorksheet('Payment Data');
+
+        // Define the headers for the worksheet
+        worksheet.columns = [
+            { header: 'firstName', key: 'firstName', width: 20 },
+            { header: 'user_id', key: 'user_id', width: 15 },
+            { header: 'Mobile No.', key: 'Mobile', width: 15 },
+            { header: 'UPI_NO', key: 'UPI_NO', width: 15 },
+            { header: 'Amount', key: 'Amount', width: 20 },
+            { header: 'Status', key: 'Status', width: 10 },
+        ];
+
+        // Add the payment data to the worksheet
+        paymentData.forEach((payment) => {
+            worksheet.addRow({
+                firstName: payment.firstName,
+                user_id: payment.user_id,
+                Mobile: payment.Mobile,
+                UPI_NO: payment.UPI_NO,
+                Amount: payment.Amount,
+                Status: payment.Status,
+            });
+        });
+
+        // Set the response headers for Excel download
+        res.setHeader('Content-Disposition', 'attachment; filename=payment_data.xlsx');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+        // Stream the Excel workbook to the response
+        workbook.xlsx.write(res).then(() => {
+            res.end();
+        });
+    } catch (error) {
+        console.error('Error generating and providing Excel file:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+
+
 
 
 
@@ -165,12 +233,12 @@ const PaymentCreate = async (req, res, next) => {
         });
 
         if (mobileNumberCheck) {
-            
 
-         req.flash('info', 'Your mobile number is already registered')
+
+            req.flash('info', 'Your mobile number is already registered')
             res.redirect("addPayment")
-             
-        }else{
+
+        } else {
             const Cpayment = new paymentmodel({
                 firstName: firstName,
                 user_id: '1255',
@@ -180,13 +248,13 @@ const PaymentCreate = async (req, res, next) => {
                 Token: '',
                 Status: true
             });
-    
+
             const result = await Cpayment.save();
-    
+
             // If you want to generate a JWT token, you can uncomment the following code.
             // const tokenCreate = jwt.sign({ result }, jwt_security);
             // console.log(tokenCreate);
-    
+
             res.redirect("./SuccessPayment");
         }
 
@@ -199,30 +267,15 @@ const PaymentCreate = async (req, res, next) => {
 };
 
 
-
 const PaymentSuccess = async (req, res, next) => {
-
-
-
     try {
-
-        console.log("date post", req.query);
-
-
+        // Retrieve query parameters
         const queryString = req.query;
-
-        // Create a new URLSearchParams object with the queryString
         const params = new URLSearchParams(queryString);
-
-        // Convert the URLSearchParams object to a regular object
         const dateRangeObject = {};
         params.forEach((value, key) => {
             dateRangeObject[key] = value;
         });
-
-        //console.log(dateRangeObject);
-
-
 
         let startDate = '';
         let endDate = '';
@@ -238,80 +291,67 @@ const PaymentSuccess = async (req, res, next) => {
             searchQuery = req.query.Search;
         }
 
-        // const result = await paymentmodel.findAll({
-        //   where: {
-        //     [Op.or]: [
-        //       { Mobile: { [Op.like]: `%${searchQuery}%` } },
-        //       { Amount: { [Op.like]: `%${searchQuery}%` } },
-        //       { firstName: { [Op.like]: `%${searchQuery}%` } },
-        //     ],
-        //     //createdAt: startDate && endDate ? { [Op.between]: [startDate, endDate] } : {},
-
-        //   },
-        // });
-        //res.status(200).send(result)
-
-
-
+        // Define the where condition for filtering
         const whereCondition = {
-
-
             [Op.or]: [
                 { Mobile: { [Op.like]: `%${searchQuery}%` } },
                 { Amount: { [Op.like]: `%${searchQuery}%` } },
                 { user_id: { [Op.like]: `%${searchQuery}%` } },
                 { UPI_NO: { [Op.like]: `%${searchQuery}%` } },
                 { firstName: { [Op.like]: `%${searchQuery}%` } },
-
             ],
-
         };
-
 
         if (startDate && endDate) {
             whereCondition.createdAt = { [Op.between]: [startDate, endDate] };
         }
+        whereCondition.Status = 1;
+
+
+        // Count the total number of records for pagination
+        const totalRecords = await paymentmodel.count({ where: whereCondition, });
+
+        // Calculate the current page and number of pages
+        const currentPage = req.query.page ? parseInt(req.query.page) : 1;
+        const perPage = 10;
+        const totalPages = Math.ceil(totalRecords / perPage);
+
+        // Calculate the offset
+        const offset = (currentPage - 1) * perPage;
+
         const orderOption = [['createdAt', 'DESC']];
 
-
+        // Retrieve data with pagination
         const result = await paymentmodel.findAll({
-
-            limit: 5,
+            limit: perPage,
+            offset: offset,
             where: whereCondition,
             order: orderOption,
-
-
         });
 
-
-        for (let i = 0; i < result.length; i++) {
-            const element = result[i];
-            const isoDateTimeString = element.createdAt;
-            const dateObject = new Date(isoDateTimeString);
-
-            // console.log(dateObject);
-            // console.log(element.dataValues.createdAt);
-        }
-
-
-        res.render('payment/SuccessPayment', { patmentData: result });
-
+        res.render('payment/SuccessPayment', {
+            patmentData: result,
+            currentPage: currentPage,
+            totalPages: totalPages,
+        });
     } catch (error) {
-
         console.log(error);
-
     }
+};
 
-
-
-}
 
 const FailPayment = async (req, res, next) => {
 
 
 
     try {
-
+        // Retrieve query parameters
+        const queryString = req.query;
+        const params = new URLSearchParams(queryString);
+        const dateRangeObject = {};
+        params.forEach((value, key) => {
+            dateRangeObject[key] = value;
+        });
 
         let startDate = '';
         let endDate = '';
@@ -327,72 +367,55 @@ const FailPayment = async (req, res, next) => {
             searchQuery = req.query.Search;
         }
 
-        // const result = await paymentmodel.findAll({
-        //   where: {
-        //     [Op.or]: [
-        //       { Mobile: { [Op.like]: `%${searchQuery}%` } },
-        //       { Amount: { [Op.like]: `%${searchQuery}%` } },
-        //       { firstName: { [Op.like]: `%${searchQuery}%` } },
-        //     ],
-        //     //createdAt: startDate && endDate ? { [Op.between]: [startDate, endDate] } : {},
-
-        //   },
-        // });
-        //res.status(200).send(result)
-
-
-
+        // Define the where condition for filtering
         const whereCondition = {
-
-
             [Op.or]: [
                 { Mobile: { [Op.like]: `%${searchQuery}%` } },
                 { Amount: { [Op.like]: `%${searchQuery}%` } },
                 { user_id: { [Op.like]: `%${searchQuery}%` } },
                 { UPI_NO: { [Op.like]: `%${searchQuery}%` } },
                 { firstName: { [Op.like]: `%${searchQuery}%` } },
-
             ],
-
         };
-
 
         if (startDate && endDate) {
             whereCondition.createdAt = { [Op.between]: [startDate, endDate] };
         }
+        whereCondition.Status = 0;
+
+
+        // Count the total number of records for pagination
+        const totalRecords = await paymentmodel.count({ where: whereCondition, });
+
+        // Calculate the current page and number of pages
+        const currentPage = req.query.page ? parseInt(req.query.page) : 1;
+        const perPage = 10;
+        const totalPages = Math.ceil(totalRecords / perPage);
+
+        // Calculate the offset
+        const offset = (currentPage - 1) * perPage;
+
         const orderOption = [['createdAt', 'DESC']];
 
-
+        // Retrieve data with pagination
         const result = await paymentmodel.findAll({
-
-            limit: 5,
+            limit: perPage,
+            offset: offset,
             where: whereCondition,
             order: orderOption,
-
-
         });
 
-
-        for (let i = 0; i < result.length; i++) {
-            const element = result[i];
-            const isoDateTimeString = element.createdAt;
-            const dateObject = new Date(isoDateTimeString);
-
-            // console.log(dateObject);
-            // console.log(element.dataValues.createdAt);
-        }
-
-
-        res.render('payment/FailPayment', { patmentData: result });
-
+        res.render('payment/FailPayment', {
+            patmentData: result,
+            currentPage: currentPage,
+            totalPages: totalPages,
+        });
     } catch (error) {
-
         console.log(error);
-
     }
 
 
 
 }
 
-module.exports = { PaymentCreate, PaymentSuccess, PaymentImoprtCSV, FailPayment, dashboard,paymentadd }
+module.exports = { PaymentCreate, PaymentSuccess, PaymentImoprtCSV, FailPayment, dashboard, paymentadd, csvDownloaded }

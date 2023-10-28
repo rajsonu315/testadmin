@@ -33,27 +33,27 @@ const User =  sequelize.define('User', {
 }, {
   // Other model options go here
 });
-User.sync({ force: false });
+//User.sync({ force: false });
 
 User.Sequelize = Sequelize;
 User.sequelize = sequelize;
 
 
 
-  //  User.sync({ force: true }).then(async ()=>{
-  //    for (let i = 0; i < 500000; i++) {
-  //      const user = {
-  //        firstName:`sonu${i}`,
-  //        user_id:`kumar${i}`,
-  //        Mobile:`628097472${i}`,
-  //        UPI_NO:`628097${i}724@upi`,
-  //        Amount:`1200${i}`,
-  //        Status:true
-  //      }
-  //      await User.create(user);
-    
-  //    }
-  //  })
+// User.sync({ force: true }).then(async () => {
+//   for (let i = 0; i < 500000; i++) {
+//     const user = {
+//       firstName: `sonu${i}`,
+//       user_id: `kumar${i}`,
+//       Mobile: `628097472${i}`,
+//       UPI_NO: `628097${i}724@upi`,
+//       Amount: `1200${i}`,
+//       Status: Math.random() < 0.5, // Randomly set to true or false
+//     };
+//     await User.create(user);
+//   }
+// });
+
 
 // `sequelize.define` also returns the model
 

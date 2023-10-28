@@ -47,8 +47,8 @@
                                   class="rounded-circle avatar avatar-xl">
                                 <div class="ms-md-4 mt-3">
 
-                                  <h2 class="text-white fw-600 mb-1">Welcome   <%= user %> <br>
-                                  
+                                  <h2 class="text-white fw-600 mb-1">Welcome <%= user %> <br>
+
                                   </h2>
 
                                   <!-- <p class="text-white"> Here is what’s happening with your projects today:</p> -->
@@ -99,6 +99,31 @@
                     </div>
                   </div>
 
+
+                  <div class="col-lg-12 col-md-6">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4>Total Payment</h4>
+                      </div>
+                      <div class="card-body">
+                        <div id="TotalSales1"></div>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 </div>
               </div>
 
@@ -116,24 +141,70 @@
 
   <% if(typeof msg !=='undefined' ){ %>
 
-  
-      <div class="notifier-container" id="flash-message">
-        <div class="toast text-white bg-success fade show">
-          <div class="d-flex">
-            <div class="toast-body">
-              <%= msg %>
-            </div>
- 
+
+    <div class="notifier-container" id="flash-message">
+      <div class="toast text-white bg-success fade show">
+        <div class="d-flex">
+          <div class="toast-body">
+            <%= msg %>
           </div>
+
         </div>
       </div>
-        <% } %>
+    </div>
+    <% } %>
 
-          <%- include('include/footer') %>
-            <script>
-              const flashMessageContainer = document.getElementById('flash-message');
-              // Hide the message after 3 seconds
-              setTimeout(() => {
-                flashMessageContainer.style.display = 'none';
-              }, 3000);
-            </script>
+      <%- include('include/footer') %>
+        <script src="../assets/js/plugins/apexcharts.min.js"></script>
+        <script>
+          const flashMessageContainer = document.getElementById('flash-message');
+          // Hide the message after 3 seconds
+          setTimeout(() => {
+            flashMessageContainer.style.display = 'none';
+          }, 3000);
+        </script>
+
+
+        <script>
+          (function () {
+            var options = {
+
+              series: [<%= total[0] %>, <%= total[1] %>], // Use the 'total' array in the chart series
+
+              labels: ["Fail Payment", "Success Payment"],
+              colors: ["#ff3a6e", "#3ec9d6"],
+              chart: {
+                type: "donut",
+                height: 377
+              },
+              legend: {
+                show: !1
+              },
+              dataLabels: {
+                enabled: !0
+              },
+              plotOptions: {
+                pie: {
+                  donut: {
+                    size: "70%"
+                  }
+                }
+              },
+              stroke: {
+                width: 0
+              },
+              responsive: [{
+                breakpoint: 1400,
+                options: {
+                  chart: {
+                    type: "donut",
+                    width: 290,
+                    height: 330
+                  }
+                }
+              }]
+            };
+            var chart = new ApexCharts(document.querySelector("#TotalSales1"), options);
+            chart.render();
+          })();
+        </script>
